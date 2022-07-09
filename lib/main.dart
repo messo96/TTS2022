@@ -148,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 Container(
-                    margin: const EdgeInsets.only(top: 10),
                     padding: const EdgeInsets.all(45),
                     child: Column(
                       children: const [
@@ -200,7 +199,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 20),
                   alignment: Alignment.center,
                   child: ElevatedButton.icon(
                     onPressed: () {
