@@ -1,5 +1,5 @@
-name: tts2nd
-description: Tounament Time To Shine from 45 Giri
+name: TimeToShine
+description: Tounament Time To Shine by 45 Giri
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -36,6 +36,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   maps_launcher: ^2.0.1
   url_launcher: ^6.1.4
+  flutter_barcode_scanner: ^2.0.0
+  flutter_launcher_icons: ^0.9.3
+
+flutter_icons:
+  image_path: "assets/images/logo.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
@@ -77,12 +84,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand-VariableFont_wght.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'SpritzRace.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -37,10 +39,29 @@ class _MyHomePageState extends State<MyHomePage> {
   final String la_forlivese_ig = "torrefazione_la_forlivese";
   final String club_ippodromo = "clubippodromo";
   final String comune_di_cesena = "comune_di_cesena";
+  final String _45giri = "45girifrisbee";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Made with 💚 by "),
+          InkWell(
+            onTap: () async {
+              if (!await launchUrl(Uri.parse(IG + _45giri),
+                  mode: LaunchMode.externalApplication)) {
+                throw 'Could not launch $club_ippodromo';
+              }
+            },
+            child: Image(
+                width: 45,
+                height: 45,
+                image: AssetImage("assets/images/45giri.png")),
+          )
+        ],
+      ),
       body: Container(
           margin: const EdgeInsets.only(top: 45, left: 10, right: 10),
           child: Column(children: [
@@ -130,7 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Image(image: AssetImage('assets/images/logo.png')),
                     Text(
                       "2nd Edition",
-                      style: TextStyle(height: 2, fontSize: 50),
+                      style: TextStyle(
+                          fontFamily: 'Quicksand', height: 2, fontSize: 50),
                     ),
                     Text(
                       "L'erba è sempre più verde",
@@ -143,7 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 OutlinedButton.icon(
                   onPressed: () {
-                    // Respond to button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SpritzRace(
+                                title: "SPRITZ RACE",
+                              )),
+                    );
                   },
                   icon: const Icon(
                     Icons.local_drink,
