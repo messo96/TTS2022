@@ -122,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           )),
                     ),
                     const Card(
+                      margin: EdgeInsets.only(right: 10),
                       elevation: 3.0,
                       child: InkWell(
                           onTap: null,
@@ -148,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Text(
                           "2nd Edition",
                           style: TextStyle(
-                              fontFamily: 'Quicksand', height: 2, fontSize: 50),
+                              fontFamily: 'Quicksand', height: 2, fontSize: 40),
                         ),
                         Text(
                           "L'erba è sempre più verde",
@@ -186,6 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Container(
                   alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: ElevatedButton.icon(
                     onPressed: () {
                       Navigator.push(
