@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-class SpritzRace extends StatefulWidget {
-  const SpritzRace({Key? key, required this.title}) : super(key: key);
+class Torneo extends StatefulWidget {
+  const Torneo({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<SpritzRace> createState() => SpritzRaceState();
+  State<Torneo> createState() => TorneoState();
 }
 
-class SpritzRaceState extends State<SpritzRace> {
+class TorneoState extends State<Torneo> {
   String barcodeScanRes = "";
 
   @override

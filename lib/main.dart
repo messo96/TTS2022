@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'SpritzRace.dart';
+import 'Torneo.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,8 +37,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final String IG = "https://www.instagram.com/";
   final String la_forlivese_ig = "torrefazione_la_forlivese";
-  final String club_ippodromo = "clubippodromo";
-  final String comune_di_cesena = "comune_di_cesena";
+  final String pol_buscherini = "pol_buscherini";
   final String _45giri = "45girifrisbee";
 
   @override
@@ -52,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () async {
                 if (!await launchUrl(Uri.parse(IG + _45giri),
                     mode: LaunchMode.externalApplication)) {
-                  throw 'Could not launch $club_ippodromo';
+                  throw 'Could not launch $pol_buscherini';
                 }
               },
               child: const Image(
@@ -81,9 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       elevation: 3.0,
                       child: InkWell(
                           onTap: () async {
-                            if (!await launchUrl(Uri.parse(IG + club_ippodromo),
+                            if (!await launchUrl(Uri.parse(IG + pol_buscherini),
                                 mode: LaunchMode.externalApplication)) {
-                              throw 'Could not launch $club_ippodromo';
+                              throw 'Could not launch $pol_buscherini';
                             }
                           },
                           child: const SizedBox(
@@ -93,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               aspectRatio: 16 / 9,
                               child: Image(
                                 image: AssetImage(
-                                    'assets/images/ippo_club_cesena.png'),
+                                    'assets/images/buscherini_logo.png'),
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -122,24 +121,18 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           )),
                     ),
-                    Card(
+                    const Card(
                       elevation: 3.0,
                       child: InkWell(
-                          onTap: () async {
-                            if (!await launchUrl(
-                                Uri.parse(IG + comune_di_cesena),
-                                mode: LaunchMode.externalApplication)) {
-                              throw 'Could not launch $comune_di_cesena';
-                            }
-                          },
-                          child: const SizedBox(
+                          onTap: null,
+                          child: SizedBox(
                             width: 100,
                             height: 80,
                             child: AspectRatio(
                               aspectRatio: 16 / 9,
                               child: Image(
-                                image: AssetImage(
-                                    'assets/images/comune_cesena.png'),
+                                image:
+                                    AssetImage('assets/images/beer_fest.png'),
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -167,26 +160,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SpritzRace(
-                                    title: "SPRITZ RACE",
-                                  )),
-                        );
-                      },
+                      onPressed: () {},
                       icon: const Icon(
                         Icons.local_drink,
                         color: Colors.green,
                         size: 24.0,
-                        semanticLabel: 'Come partecipare allo spritz race',
+                        semanticLabel: 'Come partecipare al beer race',
                       ),
-                      label: const Text("SPRITZ RACE"),
+                      label: const Text("BEER RACE"),
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        MapsLauncher.launchQuery('Atletica Endas Cesena');
+                        MapsLauncher.launchQuery(
+                            'Polisportiva Buscherini Forlì');
                       },
                       icon: const Icon(
                         Icons.map,
@@ -202,7 +188,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   alignment: Alignment.center,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // Respond to button press
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Torneo(
+                                  title: "Time To Shine 2",
+                                )),
+                      );
                     },
                     icon: const Icon(
                       Icons.home,
@@ -210,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       size: 24.0,
                       semanticLabel: 'Entra nel vivo del torneo',
                     ),
-                    label: const Text("ENTRA NEL TORNEO"),
+                    label: const Text("VEDI SCHEDULE E CALENDARIO"),
                   ),
                 )
               ])),
