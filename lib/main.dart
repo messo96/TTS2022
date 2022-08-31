@@ -1,3 +1,4 @@
+import 'package:TimeToShine/Piantina.dart';
 import 'package:flutter/material.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String la_forlivese_ig = "torrefazione_la_forlivese";
   final String pol_buscherini = "pol_buscherini";
   final String _45giri = "45girifrisbee";
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,14 +162,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Piantina(),
+                            ));
+                      },
                       icon: const Icon(
-                        Icons.local_drink,
+                        Icons.map_sharp,
                         color: Colors.green,
                         size: 24.0,
-                        semanticLabel: 'Come partecipare al beer race',
+                        semanticLabel:
+                            'Mostra la piantina del luogo in cui si svolge il torneo',
                       ),
-                      label: const Text("BEER RACE"),
+                      label: const Text("Piantina Torneo"),
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
@@ -176,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             'Polisportiva Buscherini Forlì');
                       },
                       icon: const Icon(
-                        Icons.map,
+                        Icons.location_on_sharp,
                         color: Colors.indigo,
                         size: 24.0,
                         semanticLabel: 'Indicazioni per arrivare al torneo',
