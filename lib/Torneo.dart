@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
 import 'package:http/http.dart' as http;
+
+const String url_calendario = 'https://pastebin.com/raw/E2mXsZ1X';
+const String url_sotg = 'https://forms.gle/CTQYKXWzKHYa4AFi9';
+const String url_schedule =
+    'https://docs.google.com/spreadsheets/d/1Sny_AVWF0V3ZuiXHJ8sH3AavdueZKcLl/edit?usp=sharing&ouid=104039342941605269966&rtpof=true&sd=true';
 
 class Torneo extends StatefulWidget {
   const Torneo({Key? key, required this.title}) : super(key: key);
@@ -17,26 +22,20 @@ class Torneo extends StatefulWidget {
 
 class TorneoState extends State<Torneo> {
   late Future<Orario> calendario;
-  int page = 0;
-  final String src =
-      'https://docs.google.com/spreadsheets/d/1Sny_AVWF0V3ZuiXHJ8sH3AavdueZKcLl/edit?usp=sharing&ouid=104039342941605269966&rtpof=true&sd=true';
+  int page = 1;
+  List<String> text_appbar = ["Schedule", "Calendario", "SOTG"];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    calendario = fetchOrario();
-
-    print("CIAAAAAAO");
-    calendario.then((value) => print(value));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Time To Shine 2'),
+          title: Text(text_appbar[page]),
           actions: [],
           automaticallyImplyLeading: true,
         ),
@@ -66,6 +65,15 @@ class TorneoState extends State<Torneo> {
                   Navigator.pop(context);
                 },
               ),
+              ListTile(
+                title: const Text('SOTG'),
+                onTap: () {
+                  setState(() {
+                    page = 2;
+                  });
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
@@ -79,24 +87,36 @@ class TorneoState extends State<Torneo> {
                       child: WebViewX(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        initialContent: src,
+                        initialContent: url_schedule,
                         initialSourceType: SourceType.url,
                       ))
-                  : Table(
-                      defaultColumnWidth: FixedColumnWidth(60.0),
-                      children: [
-                          TableRow(children: [
-                            Column(children: [
-                              Text('Website', style: TextStyle(fontSize: 20.0))
-                            ]),
-                            Column(children: [
-                              Text('Tutorial', style: TextStyle(fontSize: 20.0))
-                            ]),
-                            Column(children: [
-                              Text('Review', style: TextStyle(fontSize: 20.0))
-                            ]),
-                          ]),
-                        ]),
+                  : page == 1
+                      ? DataTable(columns: const <DataColumn>[
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Ora',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                              child: Text(
+                                'Evento',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ),
+                        ], rows: Orario.getCells())
+                      : Align(
+                          alignment: Alignment.centerRight,
+                          child: WebViewX(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            initialContent: url_sotg,
+                            initialSourceType: SourceType.url,
+                          ))
             ],
           ),
         ));
@@ -104,7 +124,7 @@ class TorneoState extends State<Torneo> {
 }
 
 class Orario {
-  final int ora;
+  final String ora;
   final String evento;
 
   const Orario({
@@ -118,22 +138,52 @@ class Orario {
       evento: json['evento'],
     );
   }
-}
 
-Future<Orario> fetchOrario() async {
-  var dio = Dio();
-  final response = await dio.get('https://pastebin.com/E2mXsZ1X');
-  print(response.data);
+  static List<Orario> getCalendario() {
+    List<Orario> calendario = [];
 
-  // final response = await http.get(Uri.parse('https://pastebin.com/E2mXsZ1X'));
+    Future<String> response =
+        http.read(Uri.parse('https://pastebin.com/raw/E2mXsZ1X'));
 
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return Orario.fromJson(jsonDecode(response.data));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load orario');
+    response.then((value) => print(value));
+    String ora = "";
+    response.then((value) => value.split(';').map((e) => {
+          if (ora == "")
+            ora = e
+          else
+            {calendario.add(Orario(ora: ora, evento: e)), ora = ""}
+        }));
+
+    print(calendario);
+    return calendario;
+  }
+
+  static List<DataRow> getCells() {
+    List<DataRow> list = [];
+
+    list.add(
+        const DataRow(cells: [DataCell(Text("AAAA")), DataCell(Text("AAAA"))]));
+    Orario.getCalendario().forEach((element) => list.add(DataRow(
+        cells: [DataCell(Text(element.ora)), DataCell(Text(element.ora))])));
+
+    return list;
   }
 }
+
+// Future<Orario> fetchOrario() async {
+//   var dio = Dio();
+//   final response = await dio.get('https://pastebin.com/raw/E2mXsZ1X');
+//   var calendario = Orario.fromJson(response.data);
+
+//   // final response = await http.get(Uri.parse('https://pastebin.com/E2mXsZ1X'));
+
+//   if (response.statusCode == 200) {
+//     // If the server did return a 200 OK response,
+//     // then parse the JSON.
+//     return Orario.fromJson(jsonDecode(response.data));
+//   } else {
+//     // If the server did not return a 200 OK response,
+//     // then throw an exception.
+//     throw Exception('Failed to load orario');
+//   }
+// }
