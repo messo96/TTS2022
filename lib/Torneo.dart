@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:webviewx/webviewx.dart';
 import 'package:http/http.dart' as http;
 
+const String regolamento =
+    "Partita di 60 minuti, half time a 30 minuti oppure a 7 punti.Dopo l'half time si riprende subito a giocare senza pausa.\nPunteggio massimo 13 o una volta finito il tempo c'è il CAP 1.\nUn timeout per squadra, non negli ultimi 5 minuti, \ndurata del timeout 1 minuto.\nSi ricorda che il format del torneo prevede almeno una donna in campo ogni meta.";
+
 const String url_calendario = 'https://pastebin.com/raw/E2mXsZ1X';
 const String url_sotg = 'https://forms.gle/CTQYKXWzKHYa4AFi9';
 const String url_schedule =
-    'https://docs.google.com/spreadsheets/d/1Sny_AVWF0V3ZuiXHJ8sH3AavdueZKcLl/edit?usp=sharing&ouid=104039342941605269966&rtpof=true&sd=true';
+    '<iframe src="https://docs.google.com/spreadsheets/d/1Sny_AVWF0V3ZuiXHJ8sH3AavdueZKcLl/edit?usp=sharing&ouid=104039342941605269966&rtpof=true&sd=true" width="640" height="2734" frameborder="0" marginheight="0" marginwidth="0">Caricamento…</iframe>';
 
 class Torneo extends StatefulWidget {
   const Torneo({Key? key, required this.title}) : super(key: key);
@@ -22,7 +25,7 @@ class Torneo extends StatefulWidget {
 
 class TorneoState extends State<Torneo> {
   late Future<Orario> calendario;
-  int page = 1;
+  int page = 0;
   List<String> text_appbar = ["Schedule", "Calendario", "SOTG"];
 
   @override
@@ -34,92 +37,99 @@ class TorneoState extends State<Torneo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(text_appbar[page]),
-          actions: [],
-          automaticallyImplyLeading: true,
-        ),
-        drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: [
-              ListTile(
-                title: const Text('Calendario'),
-                onTap: () {
-                  setState(() {
-                    page = 1;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Schedule'),
-                onTap: () {
-                  setState(() {
-                    page = 0;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('SOTG'),
-                onTap: () {
-                  setState(() {
-                    page = 2;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-        body: Center(
+      appBar: AppBar(
+        actions: <Widget>[
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  page = 1;
+                });
+              },
+              child: const Text(
+                'Calendario',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )),
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  page = 0;
+                });
+              },
+              child: const Text(
+                'Schedule',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )),
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  page = 2;
+                });
+              },
+              child: const Text(
+                'SOTG',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ))
+        ],
+        automaticallyImplyLeading: true,
+      ),
+      body: SingleChildScrollView(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              page == 0
-                  ? Align(
-                      alignment: Alignment.centerRight,
-                      child: WebViewX(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        initialContent: url_schedule,
-                        initialSourceType: SourceType.url,
-                      ))
-                  : page == 1
-                      ? DataTable(columns: const <DataColumn>[
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Ora',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
+        children: [
+          page == 0
+              ? (Column(children: [
+                  const Text("REGOLAMENTO"),
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: const Text(
+                        regolamento,
+                        overflow: TextOverflow.visible,
+                      )),
+                  const SizedBox(height: 10),
+                  WebViewX(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    initialContent: url_schedule,
+                    initialSourceType: SourceType.html,
+                  )
+                ]))
+              : page == 1
+                  ? DataTable(
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Orario',
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
-                          DataColumn(
-                            label: Expanded(
-                              child: Text(
-                                'Evento',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Evento',
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ], rows: Orario.getCells())
-                      : Align(
-                          alignment: Alignment.centerRight,
-                          child: WebViewX(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            initialContent: url_sotg,
-                            initialSourceType: SourceType.url,
-                          ))
-            ],
-          ),
-        ));
+                        ),
+                      ],
+                      rows: Orario.getCells(),
+                    )
+                  : (WebViewX(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      initialContent:
+                          '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSczBeFbNUQwPxI19mkF1AwkEB4ezCqcmiWEA-uNXbVOj5R3vA/viewform?embedded=true" width="${MediaQuery.of(context).size.width}" height="${MediaQuery.of(context).size.height}" frameborder="0" marginheight="0" marginwidth="0">Caricamento…</iframe>',
+                      initialSourceType: SourceType.html,
+                    ))
+        ],
+      )),
+    );
   }
 }
 
@@ -132,39 +142,52 @@ class Orario {
     required this.evento,
   });
 
-  factory Orario.fromJson(Map<String, dynamic> json) {
-    return Orario(
-      ora: json['ora'],
-      evento: json['evento'],
-    );
-  }
-
-  static List<Orario> getCalendario() {
+  static Future<List<Orario>> getCalendario() async {
     List<Orario> calendario = [];
-
-    Future<String> response =
-        http.read(Uri.parse('https://pastebin.com/raw/E2mXsZ1X'));
-
-    response.then((value) => print(value));
     String ora = "";
-    response.then((value) => value.split(';').map((e) => {
-          if (ora == "")
-            ora = e
-          else
-            {calendario.add(Orario(ora: ora, evento: e)), ora = ""}
-        }));
+    LineSplitter ls = LineSplitter();
 
-    print(calendario);
+    await http
+        .read(Uri.parse('https://pastebin.com/raw/E2mXsZ1X'))
+        .then((value) => ls.convert(value).forEach((element) {
+              List<String> line = element.split(';');
+              calendario.add(Orario(ora: line[0], evento: line[1]));
+            }));
     return calendario;
   }
 
   static List<DataRow> getCells() {
     List<DataRow> list = [];
-
-    list.add(
-        const DataRow(cells: [DataCell(Text("AAAA")), DataCell(Text("AAAA"))]));
-    Orario.getCalendario().forEach((element) => list.add(DataRow(
-        cells: [DataCell(Text(element.ora)), DataCell(Text(element.ora))])));
+    list.add(DataRow(cells: [DataCell(Text("Sabato")), DataCell(Text(""))]));
+    list.add(DataRow(
+        cells: [DataCell(Text("9:30")), DataCell(Text("Inizio partite"))]));
+    list.add(DataRow(cells: [
+      DataCell(Text("dalle 13:30 alle 15")),
+      DataCell(Text("Pausa pranzo"))
+    ]));
+    list.add(DataRow(
+        cells: [DataCell(Text("18:30")), DataCell(Text("Fine partite"))]));
+    list.add(DataRow(cells: [
+      DataCell(Text("18:45")),
+      DataCell(Text("Torneo di spikeball"))
+    ]));
+    list.add(DataRow(cells: [
+      DataCell(Text("La sera")),
+      DataCell(Text("festa della birra,\ncon tanta festa e tanta birra"))
+    ]));
+    list.add(DataRow(cells: [DataCell(Text("Domenica")), DataCell(Text(""))]));
+    list.add(DataRow(cells: [
+      DataCell(Text("dalle 8:00 alle 9:30")),
+      DataCell(Text("Colazione"))
+    ]));
+    list.add(DataRow(
+        cells: [DataCell(Text("9:30")), DataCell(Text("Inizio partite"))]));
+    list.add(DataRow(cells: [
+      DataCell(Text("dalle 13:30 alle 15")),
+      DataCell(Text("Pausa pranzo"))
+    ]));
+    list.add(DataRow(
+        cells: [DataCell(Text("17:30 circa")), DataCell(Text("Premiazioni"))]));
 
     return list;
   }
